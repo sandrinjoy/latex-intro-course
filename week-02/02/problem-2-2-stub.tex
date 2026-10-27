@@ -1,0 +1,75 @@
+\documentclass{article}
+\usepackage{zref-clever}
+\usepackage{../latex-course}
+% \coursename{Introduction to \LaTeX{}}
+\courseweek{02}{Structure, References, Errors}
+\coursestudents{Sandrine Pudukkattukaran Joy \and Winter Felix}
+
+\title{Debugging File}
+\author{Sandrine Pudukkattukaran Joy (4743017), Winter Felix (4751930)}
+\begin{document}
+\maketitle
+
+\section{Short Exposition on Tensor Products}\label{sec:tensors}
+Throughout this document, let $U$, $V$ and $W$ be vector spaces over one common field $K$.
+
+One way to motivate tensor products is the wish to study \emph{bilinearity} and specifically bilinear maps $b \colon U \times V \to W$ using the tools already developed for \emph{linearity}.
+We look for a single vector space $\mathcal{T}$, the \textbf{tensor product space} of $U$ and $V$, together with one fixed bilinear map
+\[
+	\otimes \colon U \times V \to \mathcal{T},
+\]
+through which every bilinear map can be factored.
+This can be described by the so-called \emph{universal property}, which we will discuss in the following \zcref{subsec:universal}.
+
+\subsection{Definition via the Universal Property}\label{subsec:universal}
+The pair $(\mathcal{T}, \otimes)$ is called a \textbf{tensor product} of $U$ and $V$ if it has the following \emph{universal property}: for every bilinear map $b \colon U \times V \to W$ there exists a \emph{unique} linear map $f \colon \mathcal{T} \to W$ with $b = f \circ \otimes$, that is,
+\[
+	b(u,v) = f(u \otimes v)
+\]
+for all $u \in U$ and $v \in V$.
+Investigating, we can find that mapping a $b$ to its linear partner $f$ is a vector space isomorphism
+\[
+	\mathrm{Bil}(U,V;W) \; \cong \; \mathrm{Hom}(\mathcal{T}, W).
+\]
+Remarkably, this single property already fixes $\mathcal{T}$ uniquely up to isomorphisms in a tensor product sense.
+Obviously, this definition does not immediately guarantee existence of a tensor space.
+Examples can be constructed using bases or as suitable quotient spaces.
+
+\subsection{Tensors, Elementary Tensors and Bilinearity}\label{subsec:tensors}
+The elements of $\mathcal{T}$ are called \textbf{tensors}, and the zero vector of $\mathcal{T}$ is the \emph{zero tensor}.
+The images of the universal map, that is the tensors of the form $u \otimes v$ with $u \in U$ and $v \in V$, are the \textbf{elementary tensors} (also called \emph{simple tensors}); one reads $u \otimes v$ as ``$u$ tensor $v$''.
+Be careful: Tensors are not necessarily simple tensors, but they can be represented as sums of elementary tensors.
+This leads to the question of tensor ranks, i.e., the minimum number of simple tensors that can be added to obtain a given tensor.
+
+By construction the map $\otimes$ is bilinear, which written out means
+\[
+	\begin{array}{rcl}
+		(u_1 + u_2) \otimes v & = & u_1 \otimes v + u_2 \otimes v, \\[2pt]
+		u \otimes (v_1 + v_2) & = & u \otimes v_1 + u \otimes v_2, \\[2pt]
+		(\alpha\, u) \otimes v \;=\; \alpha\,(u \otimes v) & = & u \otimes (\alpha\, v),
+	\end{array}
+\]
+for all $u, u_1, u_2 \in U$, all $v, v_1, v_2 \in V$ and every scalar $\alpha \in K$.
+Two consequences are worth recording.
+\begin{enumerate}
+	\item Because $(\alpha\, u) \otimes v = u \otimes (\alpha\, v)$, the parentheses are unnecessary and we simply write $\alpha\, u \otimes v$.
+	\item Expanding a product of two linear combinations gives
+	\[
+		\Bigl( \sum_{i=1}^{n} \alpha_i\, u_i \Bigr) \otimes \Bigl( \sum_{j=1}^{m} \beta_j\, v_j \Bigr)
+		= \sum_{i=1}^{n} \sum_{j=1}^{m} \alpha_i\, \beta_j \; u_i \otimes v_j .
+	\]
+\end{enumerate}
+
+A final word of caution: the tensor product is in general \textbf{not} commutative.\footnote{Even when $U = V$, one usually has $u \otimes v \neq v \otimes u$, so the order of the two factors must be kept.}
+
+\subsection{Multilinearity, Dual Spaces and Determinant}\label{subsec:rstensors}
+Though the tensor product was introduced so that \emph{multilinearity} could be studied with the familiar tools of \emph{linearity}, once the construct is in place, the tensors themselves become the object of interest.
+This is especially the case for forming tensor products of copies of primal and dual version of a \emph{single} finite-dimensional space $V$.
+For $r, s \ge 0$ this gives the \textbf{tensor space of type $(r,s)$},
+\[
+	T^{r}_{s}(V) = \underbrace{V \otimes \cdots \otimes V}_{r\ \mathrm{times}} \otimes \underbrace{V^{*} \otimes \cdots \otimes V^{*}}_{s\ \mathrm{times}},
+\]
+whose elements are the \textbf{$(r,s)$-tensors}, classically called $r$ times \emph{contravariant} and $s$ times \emph{covariant}.
+
+Tensors of type $(r,s)$ can be investigated from different points of view -- quite importantly from the view as mappings selecting some of the axis components as maps from the corresponding (bi-)dual spaces and investigating those mapping properties.
+\end{document}

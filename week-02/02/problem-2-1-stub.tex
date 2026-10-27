@@ -1,0 +1,26 @@
+\documentclass{article}
+\usepackage{zref-clever}
+\usepackage{../latex-course}
+\courseweek{02}{Structure, References, Errors}
+\coursestudents{Sandrine Pudukkattukaran Joy \and Winter Felix}
+
+\title{Reconstruction File}
+\author{Sandrine Pudukkattukaran Joy (4743017), Winter Felix (4751930)}
+
+\begin{document}
+\maketitle
+
+\section{This section recalls markups \& references.}\label{sec:markup}A new paragraph needs to be started explicitly by special structure.
+
+Additionally, even though we learned that the command ``\textbackslash LaTeX'' has no argument, you may need to write ``\textbackslash LaTeX\{\}'' to get \LaTeX{} with the correct spacing.
+If I want to emphasize \emph{something}, then I obviously need to pass something as an argument.
+
+Below is a list of awesome properties.
+It is the only list in \zcref{sec:markup}.
+
+\begin{itemize}
+    \item \textbf{Property} 
+    \item \textbf{Another Property}\footnote{I know this is not the prettiest document.}
+\end{itemize}
+\end{document}
+
