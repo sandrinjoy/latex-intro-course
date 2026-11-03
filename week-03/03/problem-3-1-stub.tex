@@ -1,0 +1,74 @@
+
+\documentclass{article}
+\usepackage{zref-clever}
+\usepackage{../latex-course}
+ \usepackage{mathtools}
+ \usepackage{amssymb}
+
+\courseweek{03}{Math Formatting -- Part 1}
+\coursestudents{Sandrine Pudukkattukaran Joy (4743017) \and Felix Winter (4751930)}
+
+\title{Inner Products and the Exponential Function}
+\author{Sandrine Pudukkattukaran Joy (4743017), Felix Winter (4751930)}
+\DeclarePairedDelimiter{\norm}{\lVert}{\rVert}
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+\DeclarePairedDelimiterX{\dotp}[2]{\langle}{\rangle}{#1, #2}
+\begin{document}
+\maketitle
+
+\section{Inner Products, Norms and the Cauchy--Schwarz Inequality}
+\label{sec:inner}
+Throughout this section, let $V$ be a vector space over the field $\mathbb{R}$.
+An \emph{inner product} on $V$ is a map $\langle \cdot, \cdot \rangle \colon V \times V \to \mathbb{R}$ that is linear in each argument, symmetric, and positive definite, meaning that $\langle x, x \rangle \ge 0$ for all $x \in V$, with equality if and only if $x = 0$.
+
+Every inner product induces a \emph{norm} and, through it, a \emph{metric}:
+\[
+	\norm{x} \coloneqq \sqrt{\dotp{x}{x}}, \qquad d(x, y) \coloneqq \norm{x - y}.
+\]
+For a nonzero vector $x \neq 0$, we call $\hat{x} \coloneqq x / \norm{x}$ the associated \emph{unit vector}, which satisfies $\norm{\hat{x}} = 1$.
+
+The estimate relating the inner product to the norm is the \emph{Cauchy--Schwarz inequality}
+\[
+	\abs{\dotp{x}{y}} \le \norm{x} \, \norm{y},
+\]
+which is satisfied with equality if and only if $x$ and $y$ are linearly dependent.
+It guarantees that the angle $\theta$ between two nonzero vectors is well defined through
+\[
+	\cos\theta = {\dotp{x}{y} \over \norm{x} \, \norm{y}},
+\]
+and it implies the \emph{triangle inequality} $\norm{x + y} \le \norm{x} + \norm{y}$.
+A norm that comes from an inner product is special: it obeys the \emph{parallelogram law}
+\[
+	\norm{x + y}^2 + \norm{x - y}^2 = 2 \, \norm{x}^2 + 2 \, \norm{y}^2 .
+\]
+
+Given an orthonormal system (i.e., a system of vectors that are pairwise normal and of unit length) $e_1, \dots, e_n$, the \emph{orthogonal projection} of $x$ onto its span is
+\[
+	\textup{proj}_U(x) = \sum_{i=1}^{n} \dotp{x}{e_i} \, e_i ,
+\]
+where $( x - \textup{proj}_U(x) )$ is orthogonal to every $e_i$.
+Comparing the two contributions yields \emph{Bessel's inequality}
+\[
+	\sum_{i=1}^{n}  \abs{\dotp{x}{e_i}}^2 \le \norm{x}^2 .
+\]
+
+\section{The Exponential Function as a Power Series}
+\label{sec:exponential}
+The real \emph{exponential function} can be defined by the power series
+\begin{equation}
+\label{eq:exp}
+\exp(x) \coloneqq \sum_{n=0}^{\infty} \frac{x^n}{n!},
+\end{equation}
+which converges for every $x \in \mathbb{R}$. It satisfies $\exp(0) = 1$ and the functional equation $\exp(x + y) = \exp(x)\, \exp(y)$, so in particular $\exp(x)\,\exp(-x) = 1$.
+
+There is also a connection to a classical sequence limit
+\begin{equation*}
+	\exp(x) = \lim_{n \to \infty} \!\left(1 + \frac{x}{n}\right)^n\!, \qquad\text{giving}\qquad e \coloneqq \exp(1) = \lim_{n \to \infty} \!\Big(1 + \frac{1}{n}\Big)^n.
+\end{equation*}
+
+Additionally, the exponential function is its own derivative, 
+\[
+	\frac{\textup{d}}{\textup{d}x} \exp(x) = \exp(x),
+\]
+which is very sensible given the original form in  \zcref{eq:exp}, and, together with the initial value $\exp(0) = 1$, characterises it uniquely among all differentiable functions.
+\end{document}

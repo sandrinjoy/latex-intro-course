@@ -1,0 +1,91 @@
+% The common look of all documents of the course Introduction to LaTeX:
+% the weekly exercise stubs, their solutions, and most sample documents shown in class.
+% It is meant for the article class and pdfLaTeX, and it depends only on packages in TeX Live.
+% Load it as the last package in the preamble:
+%
+%   \documentclass{article}
+%   ...
+%   \usepackage{latex-course}
+%   \courseweek{02}{Structure, References, Errors}
+%   \coursestudents{Ada Lovelace, Alan Turing}
+%
+\NeedsTeXFormat{LaTeX2e}[2023-11-01]
+\ProvidesPackage{latex-course}[2026-10-20 v0.1 Common look of the course documents]
+
+% Name the course, the university and the term once, for the footer and the PDF metadata.
+\newcommand{\coursename}{Introduction to \LaTeX{}}
+\newcommand{\courseuniversity}{Heidelberg University}
+\newcommand{\courseterm}{Winter Term 2026/27}
+
+% Always show the term, not a date, in the \maketitle title block.  Whatever the
+% document passes to \date (or the \today default) is ignored: \maketitle is
+% wrapped so its date line always reads "WS 2026".  Redefine \coursetitleterm to
+% change the text.
+\newcommand{\coursetitleterm}{WS 2026}
+\let\@coursemaketitleorig\maketitle
+\renewcommand{\maketitle}{%
+	\date{\coursetitleterm}%
+	\@coursemaketitleorig
+}
+
+% Let each document state its week and subject, and let students state their names.
+% Both appear in the page header and stay empty until set.
+\newcommand{\@courseweeknumber}{}
+\newcommand{\@courseweeksubject}{}
+\newcommand{\@coursestudents}{}
+\newcommand{\courseweek}[2]{%
+	\renewcommand{\@courseweeknumber}{#1}%
+	\renewcommand{\@courseweeksubject}{#2}%
+}
+\newcommand{\coursestudents}[1]{\renewcommand{\@coursestudents}{#1}}
+
+% Use Latin Modern in T1 encoding for now; the signature font is still to be chosen.
+\RequirePackage[T1]{fontenc}
+\RequirePackage{lmodern}
+\RequirePackage{microtype}
+
+% Set the page layout on A4 paper, leaving room for the header and footer.
+\RequirePackage[a4paper, margin = 25mm, includehead, includefoot, headheight = 14pt]{geometry}
+
+% Separate paragraphs by vertical space instead of indentation.
+\RequirePackage[skip = 0.5\baselineskip plus 2pt]{parskip}
+
+% Define the accent color of the course (Paul Tol's bright blue, as in the slides).
+\RequirePackage{xcolor}
+\definecolor{courseaccent}{HTML}{4477AA}
+
+% Put the week and the students' names in the header, the course and the page number in the footer.
+\RequirePackage{fancyhdr}
+\newcommand{\@coursepagestyle}{%
+	\fancyhf{}%
+	\fancyhead[L]{%
+		\ifx\@courseweeknumber\@empty
+		\else
+			Week~\@courseweeknumber: \@courseweeksubject
+		\fi
+	}%
+	\fancyhead[R]{\@coursestudents}%
+	\fancyfoot[L]{\coursename{} \textperiodcentered{} \courseuniversity{} \textperiodcentered{} \courseterm}%
+	\fancyfoot[R]{\thepage}%
+	\renewcommand{\headrulewidth}{0.4pt}%
+	\renewcommand{\footrulewidth}{0pt}%
+	\renewcommand{\headrule}{{\color{courseaccent}\hrule height \headrulewidth width \headwidth}}%
+}
+\fancypagestyle{course}{\@coursepagestyle}
+% Use the same style on title pages, which article sets to plain.
+\fancypagestyle{plain}{\@coursepagestyle}
+\pagestyle{course}
+
+% Load hyperref at the end of the preamble, after every package the document loads itself.
+% A document may also load hyperref on its own; then only the settings below are applied.
+% Packages that look for hyperref while they are being loaded will not find it this way;
+% such a document has to load hyperref itself, before them.
+\PassOptionsToPackage{pdfusetitle}{hyperref}
+\AddToHook{begindocument/before}{%
+	\RequirePackage{hyperref}%
+	\hypersetup{
+		colorlinks = true,
+		allcolors = courseaccent,
+		pdfsubject = {\coursename, \courseuniversity, \courseterm},
+	}%
+}
