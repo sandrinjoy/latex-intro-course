@@ -1,0 +1,93 @@
+\documentclass{article}
+
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{nicematrix}
+\usepackage{zref-clever}
+\usepackage{../latex-course}
+
+% Paired delimiters declared here
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+\DeclarePairedDelimiterX{\set}[2]{\lbrace}{\rbrace}{#1 \;\delimsize\vert\; \mathopen{} #2}
+\DeclarePairedDelimiterX{\augment}[2]{\lbrack}{\rbrack}{#1 \;,\ \mathopen{} #2}
+
+% Operator names declared here
+\DeclareMathOperator{\rank}{rank}
+
+\courseweek{04}{Math Formatting -- Part 2}
+\coursestudents{Sandrine Pudukkattukaran Joy \and Vincent Kamusella}
+
+\title{Linear Systems of Equations}
+\author{Sandrine Pudukkattukaran Joy (4743017), Vincent Kamusella (4752668)}
+\begin{document}
+\maketitle
+
+\section{A Motivating Example}
+\label{sec:example}
+Over the field $\mathbb{R}$, consider the linear system
+\begin{subequations}
+	\label{eq:system}
+	\begin{align}
+		2x + y & = 5, \label{eq:equation:sum}\\
+		x - y & = 1. \label{eq:equation:diff}
+	\end{align}
+\end{subequations}
+Adding the two equations eliminates $y$:
+\begin{equation}
+	\label{eq:x}
+	\tag{\ref{eq:equation:sum}+\ref{eq:equation:diff}}
+	3x = 6.
+\end{equation}
+From \eqref{eq:x}, we get $x = 2$, and substituting into \eqref{eq:equation:diff} (or \eqref{eq:equation:sum}) then gives $y = 1$.
+The unique solution is therefore
+\begin{equation*}
+	\begin{bmatrix}
+		x \\ y
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		2 \\ 1
+	\end{bmatrix}.
+\end{equation*}
+
+\section{Linear Systems in General}
+\label{sec:general}
+Let $K$ be a field and $m, n \in \mathbb{N}$.
+A \emph{linear system} of $n$ equations in $m$ unknowns is an equation $A x = b$ with coefficient matrix $A \in K^{n \times m}$, right-hand side $b \in K^n$ and variable $x \in K^m$:
+\[
+	A x
+	=
+	\begin{bNiceMatrix}
+		a_{11} & \Cdots & a_{1m} \\
+		\Vdots & \Ddots & \Vdots \\
+		a_{n1} & \Cdots & a_{nm}
+	\end{bNiceMatrix}
+	\begin{bNiceMatrix}
+		x_1 \\ \Vdots \\ x_m
+	\end{bNiceMatrix}
+	=
+	\begin{bNiceMatrix}
+		b_1 \\ \Vdots \\ b_n
+	\end{bNiceMatrix}
+	=
+	b.
+\]
+We seek its \emph{solution set}
+\begin{equation}
+	\label{eq:solution-set}
+	L(A, b) \coloneqq \set{x \in K^m}{A x = b}.
+\end{equation}
+The system is solvable if and only if $b$ lies in the column space of $A$, which is equivalent to $\rank(A) = \rank(\augment{A}{b})$, where $\augment{A}{b}\in K^{n \times (m + 1)}$ is the right hand side augmented coefficient matrix.
+Provided we find any one particular solution $x_0$, then $L(A, b) = x_0 + L(A, 0)$, and $L(A, 0)$ is a subspace of $K^m$ of dimension $m - \rank(A)$.
+Accordingly, the set defined in \eqref{eq:solution-set} is either empty or has the same cardinality as the solution set to the homogeneous system.
+More specifically, we have that
+\begin{equation}
+\abs{L(A, b)} =
+\begin{dcases}
+	0 & \text{if } \rank(A) \neq \rank(\augment{A}{b}), \\
+	\abs{L(A, 0)} = 1 & \text{if } \rank(A) = \rank(\augment{A}{b}) = m, \\
+	\abs{L(A, 0)} > 1 & \text{if } \rank(A) = \rank(\augment{A}{b}) < m.
+\end{dcases}
+\end{equation}
+For the system in \eqref{eq:system}, we have $n = m = 2$ and $\rank\begin{psmallmatrix} 2 & 1 \\ 1 & -1 \end{psmallmatrix} =\rank\begin{pNiceArray}{cc|c}[small] 2 & 1 & 5 \\ 1 & -1 & 1 \end{pNiceArray} = m$, so it is uniquely solvable, in agreement with the explanation in \zcref{sec:example}.
+\end{document}
