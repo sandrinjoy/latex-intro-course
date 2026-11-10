@@ -83,11 +83,11 @@ Accordingly, the set defined in \eqref{eq:solution-set} is either empty or has t
 More specifically, we have that
 \begin{equation*}
 \abs{L(A, b)} =
-\begin{dcases}
+\begin{cases}
 	0 & \text{if } \rank(A) \neq \rank(\augment{A}{b}), \\
 	\abs{L(A, 0)} = 1 & \text{if } \rank(A) = \rank(\augment{A}{b}) = m, \\
 	\abs{L(A, 0)} > 1 & \text{if } \rank(A) = \rank(\augment{A}{b}) < m.
-\end{dcases}
+\end{cases}
 \end{equation*}
 For the system in \eqref{eq:system}, we have $n = m = 2$ and $\rank\begin{psmallmatrix} 2 & 1 \\ 1 & -1 \end{psmallmatrix} =\rank\begin{pNiceArray}{cc|c}[small] 2 & 1 & 5 \\ 1 & -1 & 1 \end{pNiceArray} = m$, so it is uniquely solvable, in agreement with the explanation in \zcref{sec:example}.
 \end{document}
