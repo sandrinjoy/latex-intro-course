@@ -9,7 +9,7 @@
 % Paired delimiters declared here
 \DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
 \DeclarePairedDelimiterX{\set}[2]{\lbrace}{\rbrace}{#1 \;\delimsize\vert\; \mathopen{} #2}
-\DeclarePairedDelimiterX{\augment}[2]{\lbrack}{\rbrack}{#1 \;,\ \mathopen{} #2}
+\DeclarePairedDelimiterX{\augment}[2]{\lbrack}{\rbrack}{#1 \;\delimsize\vert\; \mathopen{} #2}
 
 % Operator names declared here
 \DeclareMathOperator{\rank}{rank}
@@ -81,13 +81,13 @@ The system is solvable if and only if $b$ lies in the column space of $A$, which
 Provided we find any one particular solution $x_0$, then $L(A, b) = x_0 + L(A, 0)$, and $L(A, 0)$ is a subspace of $K^m$ of dimension $m - \rank(A)$.
 Accordingly, the set defined in \eqref{eq:solution-set} is either empty or has the same cardinality as the solution set to the homogeneous system.
 More specifically, we have that
-\begin{equation}
+\begin{equation*}
 \abs{L(A, b)} =
 \begin{dcases}
 	0 & \text{if } \rank(A) \neq \rank(\augment{A}{b}), \\
 	\abs{L(A, 0)} = 1 & \text{if } \rank(A) = \rank(\augment{A}{b}) = m, \\
 	\abs{L(A, 0)} > 1 & \text{if } \rank(A) = \rank(\augment{A}{b}) < m.
 \end{dcases}
-\end{equation}
+\end{equation*}
 For the system in \eqref{eq:system}, we have $n = m = 2$ and $\rank\begin{psmallmatrix} 2 & 1 \\ 1 & -1 \end{psmallmatrix} =\rank\begin{pNiceArray}{cc|c}[small] 2 & 1 & 5 \\ 1 & -1 & 1 \end{pNiceArray} = m$, so it is uniquely solvable, in agreement with the explanation in \zcref{sec:example}.
 \end{document}
