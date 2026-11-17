@@ -1,0 +1,167 @@
+\documentclass{article}
+
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage[spaceRequire = false]{algpseudocodex}
+\usepackage{siunitx}
+\usepackage{zref-clever}
+\usepackage{../latex-course}
+\usepackage{week-05}
+\newcommand{\iter}[2]{#1_{(#2)}}           % the algorithms' iterates
+
+\sisetup{per-mode = power}
+
+\courseweek{05}{Theorems, Algorithms, Code, Units}
+\coursestudents{Sandrine Pudukkattukaran Joy \and Lennard Boehm}
+
+\title{The Gradient Descent Method}
+\author{Sandrine Pudukkattukaran Joy (4743017), Lennard Boehm (4761574)}
+\begin{document}
+\maketitle
+
+\section{Descent Methods}
+\label{section:descent}
+We study the minimization of an objective function $f \colon \R^n \to \R$, of which we assume the following.
+
+\begin{assumption}
+	\label{assumption:standing}
+	The objective $f \colon \R^n \to \R$ is continuously differentiable, and $M \in \R^{n \times n}$ is symmetric and positive definite.
+\end{assumption}
+
+\begin{definition}[directional derivative, descent direction]
+	\label{definition:descent}
+	For $x, d \in \R^n$, the \emph{directional derivative} of $f$ at $x$ in direction $d$ is
+	\begin{equation*}
+		\dderiv{x}{d} \coloneqq \lim_{t \to 0} \frac{f(x + t \, d) - f(x)}{t}.
+	\end{equation*}
+	The direction $d$ is a \emph{descent direction} for $f$ at $x$ if $\dderiv{x}{d} < 0$.
+\end{definition}
+
+\begin{remark}
+	Because $f$ is differentiable, the map $d \mapsto \dderiv{x}{d}$ is linear.
+	This linear functional matches the \emph{derivative} $f'(x) \in (\R^n)^*$, so that we have $\dderiv{x}{d} = f'(x) \, d$.
+\end{remark}
+We call $x$ \emph{stationary} when $f'(x) = 0$, and where $f'(x) \neq 0$, the descent directions at $x$ form the open half-space $\{\, d \in \R^n : \dderiv{x}{d} < 0 \,\}$, bounded by the hyperplane on which $f'(x)$ vanishes.
+A \emph{line-search descent method} starts from an initial guess $\iter{x}{0}$ and repeatedly picks a descent direction, picks a step length that produces descent along it, and moves, until a stopping criterion is met.
+This core behavior is described in the following pseudocode.
+
+\begin{algorithm} \hfill
+\label{algorithm:descent}
+	\begin{algorithmic}[1]
+		\Procedure{DescentMethod}{$f, \iter{x}{0}$}
+			\State $k \gets 0$
+			\While{stopping criterion not satisfied}
+		
+			\State  choose descent direction $\iter{d}{k}$ 
+				\label{algorithm:descent:direction}for $f$ at $\iter{x}{k}$
+				
+				\State  choose step length $\iter{t}{k} > 0$ with $f(\iter{x}{k} + \iter{t}{k} \, \iter{d}{k}) \le f(\iter{x}{k})$
+				\label{algorithm:descent:steplength}
+				\State $\iter{x}{k+1} \gets \iter{x}{k} + \iter{t}{k} \, \iter{d}{k}$
+				\State $k \gets k + 1$
+			\EndWhile
+			\State \Return $\iter{x}{k}$
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
+Two important choices in \zcref{algorithm:descent} remain open: the search direction $\iter{d}{k}$ (\zcref{algorithm:descent:direction}) and the step length $\iter{t}{k}$ (\zcref{algorithm:descent:steplength}), which we address in the following section.
+
+\section{Steepest-Descent Directions}
+\label{section:direction}
+The derivative $f'(x)$ contains all descent information for $f$, but it is an object in the dual space $(\R^n)^*$, whereas a search direction must be a vector in $\R^n$.
+Fixing an inner product on the search space, we can find a best representative in the primal space, which makes descent information usable in the primal context.
+For the symmetric positive definite matrix $M$ of \zcref{assumption:standing}, we set
+\begin{equation*}
+	\inner{u}{v}_M \coloneqq u^\transp M \, v
+	\qquad\text{and}\qquad
+	\norm{u}_M \coloneqq \inner{u}{u}_M^{1/2}.
+\end{equation*}
+Since $d \mapsto \dderiv{x}{d}$ is linear, there is a unique vector $\gradM f(x) \in \R^n$ with
+\begin{equation}
+	\label{eq:m-gradient}
+	f'(x)\, d = \dderiv{x}{d} = \inner{\gradM f(x)}{d}_M \qquad \text{for all } d \in \R^n,
+\end{equation}
+called the \emph{$M$-gradient} of $f$ at $x$, and it can be computed by solving a linear system of equations.
+A \emph{direction of steepest descent} at a non-stationary $x$ minimizes the normalized directional derivative $\dderiv{x}{d} / \norm{d}_M$ over $d \neq 0$.
+By \eqref{eq:m-gradient} the numerator equals $\inner{\gradM f(x)}{d}_M$, so the Cauchy--Schwarz inequality shows the minimum is attained exactly at the negative multiples of $\gradM f(x)$.
+Its negative is therefore a descent direction at every non-stationary point, since
+\begin{equation}
+	\label{eq:m-descent}
+	\dderiv{x}{-\gradM f(x)} = \inner{\gradM f(x)}{-\gradM f(x)}_M = -\norm{\gradM f(x)}_M^2 < 0.
+\end{equation}
+
+\begin{remark}
+	The gradient depends on the inner product, and so do its physical dimensions.
+	Suppose $x$ is a position measured in $\unit{\meter}$ and $f$ an energy measured in $\unit{\joule}$, as for the potential $f(x) = m g \, x$ of a weight $m g = \qty{9.81}{\newton}$.
+	Then $\dderiv{x}{d} = f'(x)\, d$ is an energy as well, so $f'(x)$ carries $\unit{\joule\per\meter} = \unit{\newton}$.
+	For $\gradM f(x)$ to come out as a genuine displacement in $\unit{\meter}$, so that the update $\iter{x}{k+1} = \iter{x}{k} - t \, \gradM f(\iter{x}{k})$ runs with a dimensionless step length $t$, the matrix $M$ must carry the dimensions of a Hessian, i.e., $\unit{\joule\per\meter\squared}$.
+\end{remark}
+
+\section{Armijo Backtracking}
+\label{section:armijo}
+Having found descent directions that we can leverage in the descent algorithm, the line-search method still requires choosing a step length to follow a descent direction along for.
+There are stalling issues to navigate in order to make sure the final algorithm converges, which leads to the \emph{Armijo condition} for a descent direction $d$ at $x$ and a parameter $\sigma \in (0, 1)$, which states that a step $t > 0$ is admissible when
+\begin{equation}
+	\label{eq:armijo}
+		\frac{f(x + td) - f(x)}{t\dderiv{x}{d}} \ge \sigma.
+\end{equation}
+It formalizes the expectation that the actual objective decrease is at least a fixed fraction of the descent the first order model promised.
+In practice, one decreases the step length until the condition is met.
+
+\begin{algorithm}[Armijo backtracking] \hfill
+	\label{algorithm:armijo}
+	\begin{algorithmic}[1]
+		\Require line-search function $t\mapsto f(x + t\,d)$
+		\Require Armijo parameter $\sigma \in (0, 1)$, backtracking parameter $\beta \in (0, 1)$, initial step length $s > 0$
+		\Ensure a step length $t > 0$ with sufficient descent
+		\State Set $t \coloneqq s$
+		\While{$f(x + t\,d) - f(x) > t\sigma\dderiv{x}{d}$}
+			\State Set $t \coloneqq \beta \, t$
+		\EndWhile
+		\State \Return $t$
+	\end{algorithmic}
+\end{algorithm}
+
+This is in fact a finite algorithm, as the following theorem shows.
+
+\begin{theorem}[well-definedness of Armijo backtracking]
+	\label{theorem:armijo}
+	Let $\sigma \in (0, 1)$. For every $x, d \in \R^n$ with $\dderiv{x}{d} < 0$ there exists a $T > 0$ such that the Armijo condition \eqref{eq:armijo} holds for all $t \in (0, T]$.
+\end{theorem}
+
+\begin{proof}
+	Suppose not. Then there is a sequence $\iter{t}{k} \searrow 0$ with $f(x + \iter{t}{k} d) > f(x) + \sigma \, \iter{t}{k} \, \dderiv{x}{d}$, hence
+	\begin{equation*}
+		\frac{f(x + \iter{t}{k} d) - f(x)}{\iter{t}{k}} > \sigma \, \dderiv{x}{d}.
+	\end{equation*}
+	Passing to the limit $k \rightarrow \infty$ gives $\dderiv{x}{d} \ge \sigma \, \dderiv{x}{d}$, which contradicts $\dderiv{x}{d} < 0$ because $\sigma \in (0, 1)$.
+\end{proof}
+
+Since the trial steps $s\beta^\ell$ tend to $0$, one of them eventually lies in $(0, T]$, so \zcref{algorithm:armijo} terminates whenever the search direction is a descent direction.
+
+\section{\texorpdfstring{$M$}{M}-Gradient Descent}
+\label{section:gradient}
+The \emph{$M$-gradient descent method} is \zcref{algorithm:descent} with the search direction fixed to the negative $M$-gradient, the step length supplied by the Armijo backtracking rule of \zcref{section:armijo} and a termination criterion.
+
+\begin{algorithm}[$M$-gradient descent with Armijo line search] \hfill
+	\label{algorithm:gradient}
+	\begin{algorithmic}[1]
+		\Require objective $f \colon \R^n \to \R$
+		\Require initial guess $\iter{x}{0} \in \R^n$
+		\Require symmetric positive definite $M \in \R^{n \times n}$
+		\Require Armijo parameter $\sigma \in (0, 1)$, backtracking parameter $\beta \in (0, 1)$, initial step length $s > 0$
+		\Ensure a point $x \in \R^n$ with $f(x) \le f(\iter{x}{0})$
+		\State Set $x \coloneqq \iter{x}{0}$
+		\While {no stopping criterion satisfied}
+			\State Compute $d = -\gradM f(x)$ from \eqref{eq:m-gradient}
+			\State Determine a corresponding $t > 0$ by \zcref{algorithm:armijo}
+			\State  Set $x \coloneqq x + t \, d$
+		\EndWhile
+		\State \Return $x$
+	\end{algorithmic}
+\end{algorithm}
+
+At every non-stationary iterate, the direction $d = -\gradM f(x)$ is a descent direction by \eqref{eq:m-descent}, so $\dderiv{x}{d} < 0$ and the Armijo backtracking terminates by \zcref{theorem:armijo}; \zcref{algorithm:gradient} is therefore well defined.
+\end{document}

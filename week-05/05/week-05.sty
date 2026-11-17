@@ -1,0 +1,46 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{week-05}
+
+% Theorem-like environments. The counter is shared.
+\RequirePackage{amsthm}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem{algorithm}[theorem]{Algorithm}
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem*{remark*}{Remark}
+% Additional zref-clever names that latex-course.sty does not already handle.
+\RequirePackage{zref-clever}
+\zcsetup{cap}
+\AddToHook{env/assumption/begin}{\zcsetup{countertype = {theorem = assumption}}}
+\AddToHook{env/algorithm/begin}{\zcsetup{countertype = {theorem = algorithm}}}
+\AddToHook{env/remark/begin}{\zcsetup{countertype = {theorem = remark}}}
+\zcRefTypeSetup{assumption}{
+	Name-sg = Assumption, name-sg = assumption,
+	Name-pl = Assumptions, name-pl = assumptions,
+}
+\zcRefTypeSetup{algorithm}{
+	Name-sg = Algorithm, name-sg = algorithm,
+	Name-pl = Algorithms, name-pl = algorithms,
+}
+
+% Reference the numbered lines of a procedure/algorithm as "Step N".  algorithmicx
+% advances its line counter ALG@line without \refstepcounter, so a \label on a
+% \State would otherwise inherit the enclosing algorithm's counter.  Inside an
+% algorithmic body, tell zref-clever that the active counter is ALG@line.
+\AddToHook{env/algorithmic/begin}{\zcsetup{currentcounter = ALG@line}}
+\zcsetup{countertype = {ALG@line = step}}
+\zcRefTypeSetup{step}{
+	Name-sg = Step, name-sg = step,
+	Name-pl = Steps, name-pl = steps,
+}
+
+% Additional math commands that the latex-course.sty does not provide
+\RequirePackage{amssymb}                    % for \mathbb
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\transp}{\mathsf{T}}           % Matrixtranspose, used as A^\transp
+\newcommand{\gradM}{\nabla_{M}}            % the M-gradient, \gradM f(x)
+\newcommand{\dderiv}[2]{f'(#1, #2)}        % directional derivative
