@@ -1,0 +1,34 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{week-06}[2026/11/19 v0.2 Tables and floats setup for the week-06 exercise]
+
+% Tables.
+\RequirePackage{array}          % \newcolumntype, >{...}/<{...}, m/b columns
+\RequirePackage{booktabs}       % \toprule, \midrule, \bottomrule, \cmidrule, \addlinespace
+\RequirePackage{multirow}       % \multirow
+\RequirePackage{siunitx}        % the S column, and \num / \unit / \qty
+\sisetup{per-mode = power}
+
+% Floats and captions.
+\RequirePackage{graphicx}       % \includegraphics
+\RequirePackage{float}          % the [H] placement option
+\RequirePackage{algorithm}      % the algorithm float for pseudocode
+\RequirePackage{algpseudocodex} % the algorithmic body inside it
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}   % print \Require as "Input:"
+\renewcommand{\algorithmicensure}{\textbf{Output:}}   % print \Ensure as "Output:"
+\RequirePackage{rotating}       % sidewaystable: a table rotated onto a page of its own
+\RequirePackage{caption}        % correct spacing for captions placed above tables
+\RequirePackage{subcaption}     % subfigure / subtable
+\captionsetup[sub]{labelformat = simple}
+\renewcommand{\thesubfigure}{(\alph{subfigure})}
+
+% A ragged-right paragraph column
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\RequirePackage{zref-clever}
+
+% Notation that latex-course.sty does not provide.
+\RequirePackage{amssymb}
+\newcommand{\R}{\mathbb{R}}
+\DeclareMathOperator{\prox}{prox}
+\DeclareMathOperator{\proj}{proj}
+\newcommand{\dvg}{\operatorname{div}}
